@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  client:
+    container_name: ${CONTAINERPREFIX}client
+    build:
+      context: ./client
+      dockerfile: ../Dockerfile
+    command: yarn prod --port 3000
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=3000
+      - BACKEND_URL=https://backend.${PATHPREFIX}joinme.cz
+    networks:
+      - caddy
+    labels:
+      caddy: ${PATHPREFIX}joinme.cz
+      caddy.reverse_proxy: '{{upstreams 3000}}'
+  server:
+    container_name: ${CONTAINERPREFIX}server
+    build:
+      context: ./server
+      dockerfile: ../Dockerfile
+    command: yarn prod
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8000
+      - FRONTEND_URL=https://${PATHPREFIX}joinme.cz
+      - JWT_SECRET=${JWT_SECRET}
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}
+    networks:
+      - caddy
+    labels:
+      caddy: backend.${PATHPREFIX}joinme.cz
+      caddy.reverse_proxy: '{{upstreams 8000}}'
+
+networks:
+  caddy:
+    external: true

@@ -1,0 +1,59 @@
+name: Push
+
+on:
+  push:
+    branches: ['**']
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build & deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: executing remote ssh commands using key
+        uses: appleboy/ssh-action@master
+        env:
+          BRANCH: ${{ github.ref }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          SENDGRID_API_KEY: ${{ secrets.SENDGRID_API_KEY }}
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: BRANCH,JWT_SECRET,SENDGRID_API_KEY
+          script: |
+            cd /var/www
+
+            branch=${BRANCH##*/}
+
+            ppref="$branch"
+            ppref+="."
+            cpref="$branch"
+            cpref+="_"
+
+            export PATHPREFIX="$ppref"
+            export CONTAINERPREFIX="$cpref"
+            export JWT_SECRET="$JWT_SECRET"
+            export SENDGRID_API_KEY="$SENDGRID_API_KEY"
+
+            if [ -d "git/$branch" ]; then
+              cd git/$branch
+              docker-compose down
+              git pull
+            else
+              git clone -b $branch git@github.com:4IT580/joinme.git git/$branch
+              cd git/$branch
+            fi
+
+            if [ "$branch" = "master" ]; then
+              export PATHPREFIX=""
+            fi
+
+            docker-compose -f docker-compose.caddy.yml up -d --build
+
+            export URL=https://"$PATHPREFIX"joinme.cz
+
+            echo Waiting for $URL to return 200
+
+            timeout 300 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $URL)" != "200" ]]; do sleep 5; done' || false
