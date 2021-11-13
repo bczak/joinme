@@ -16,6 +16,7 @@ export default function Routes() {
       <Route path="/activate-account">
         <ActivateAccount />
       </Route>
+      <Route path="/dashboard"><EmptyDashboard /></Route>
       <Route path="/">{auth.token ? <EmptyDashboard /> : <LandingPage />}</Route>
     </Switch>
   )
