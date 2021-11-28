@@ -6,7 +6,7 @@ export default async (_, __, { auth }) => {
 
   const allowedEvents = await db().pluck('event_id').from('eventsUsers').where('userId', user.id)
 
-  return await db()
+  return db()
     .select('*')
     .from('events')
     .orderBy('from', 'asc')

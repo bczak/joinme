@@ -4,7 +4,6 @@ import LandingPage from './pages/LandingPage'
 import ResetPassword from './pages/ResetPassword'
 import ActivateAccount from './pages/ActivateAccount'
 import Dashboard from './pages/Dashboard'
-import UserProfile from './pages/UserProfile'
 import EventDetail from './pages/EventDetail'
 
 export default function Routes() {
@@ -19,14 +18,20 @@ export default function Routes() {
         <ActivateAccount />
       </Route>
       {auth.token && (
-        <Route path="/profile">
-          <UserProfile />
-        </Route>
+        <>
+          <Route path="/profile">
+            <Dashboard name={'profile'} />
+          </Route>
+          <Route path="/events">
+            <Dashboard name={'events'} />
+          </Route>
+        </>
+
       )}
       <Route path="/event/:id">
         <EventDetail />
       </Route>
-      <Route path="/">{auth.token ? <Dashboard /> : <LandingPage />}</Route>
+      <Route path="/">{auth.token ? <Dashboard name={'main'}/> : <LandingPage />}</Route>
     </Switch>
   )
 }

@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }) {
         </div>
 
         <div className="flex flex-row flex-grow overflow-y-hidden">
-          <div className={classNames('md:flex p-1 z-50', isMenuOpen ? 'fixed' : 'hidden')}>
+          <div className={classNames('md:flex p-1 z-50 m-1', isMenuOpen ? 'fixed' : 'hidden')}>
             <Sidebar />
           </div>
           <div className="flex-grow overflow-y-scroll">{children}</div>

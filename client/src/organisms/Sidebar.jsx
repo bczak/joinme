@@ -21,7 +21,7 @@ export default function Sidebar() {
             )}
           />
         </Link>
-        <Link to="#" className="block p-2 mb-1">
+        <Link to="/events" className="block p-2 mb-1">
           <CalendarIcon className="bg-gray-700 rounded-md p-2" />
         </Link>
         <Link to="#" className="block p-2 mb-1">
@@ -36,7 +36,7 @@ export default function Sidebar() {
           />
         </Link>
 
-        <div className="flex-grow"></div>
+        <div className="flex-grow" />
 
         <Link to="/" onClick={auth.signout} className="block p-2 mb-1">
           <LogoutIcon className="bg-gray-700 rounded-md p-2" />

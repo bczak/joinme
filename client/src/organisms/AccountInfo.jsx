@@ -10,7 +10,7 @@ export default function AccountInfo() {
 
   return (
     <div className="flex">
-      <div className="rounded-3xl relative flex flex-col justify-center shadow-md bg-white p-6 py-4 mt-4 max-w-md">
+      <div className="rounded-xl relative flex flex-col justify-center shadow-md bg-gray-200 p-6 py-4 m-2 ml-0 max-w-md">
         <div className="flex flex-col justify-center items-center">
           <img src={image} alt="user" className="w-44 rounded-full" />
           <span className="text-xl font-bold">Name</span> <span className="text-lg">{profile.name}</span>
